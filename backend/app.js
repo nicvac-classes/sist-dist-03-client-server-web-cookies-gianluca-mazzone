@@ -1,11 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const app = express();
 
-// Configurazione EJS
 app.set('view engine', 'ejs');
-
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
     res.render('form');
@@ -13,7 +13,9 @@ app.get('/', (req, res) => {
 
 app.post('/greet', (req, res) => {
     const name = req.body.name;
-    res.render('greet', { name: name });
+    // Imposta un cookie chiamato "name" con valore l'input dell'utente
+    res.cookie('name', name, { maxAge: 24 * 60 * 60 * 1000 }); 
+    res.render('greet', { message:'Benvenuto', name: name });
 });
 
 const PORT = 3000;
